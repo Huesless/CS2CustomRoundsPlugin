@@ -21,17 +21,12 @@ namespace CS2CustomRoundsPlugin
                 if (player == null || !player.IsValid)
                     continue;
                 Random rand = new Random();
-                bool bombCarrier = CommonFunc.PlayerHasBomb(player);
-                player.RemoveWeapons();
+                CommonFunc.RemoveWeapons(player);
                 player.GiveNamedItem(CsItem.KevlarHelmet);
                 player.GiveNamedItem(WeaponsSet.PrimaryWeapons.ElementAt(rand.Next(WeaponsSet.PrimaryWeapons.Count)));
                 player.GiveNamedItem(WeaponsSet.SecondaryWeapons.ElementAt(rand.Next(WeaponsSet.SecondaryWeapons.Count)));
                 player.GiveNamedItem(WeaponsSet.Knife.ElementAt(rand.Next(WeaponsSet.Knife.Count)));
                 player.GiveNamedItem(WeaponsSet.Grenades.ElementAt(rand.Next(WeaponsSet.Grenades.Count)));
-                if (bombCarrier)
-                {
-                    player.GiveNamedItem(CsItem.C4);
-                }
 
 
 

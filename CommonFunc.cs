@@ -1,4 +1,5 @@
 ﻿using CounterStrikeSharp.API.Core;
+using CounterStrikeSharp.API.Modules.Entities.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,16 @@ namespace CS2CustomRoundsPlugin
                 }
             }
             return false;
+        }
+
+        public static void RemoveWeapons(CCSPlayerController player)
+        {
+            var bombcarrier = CommonFunc.PlayerHasBomb(player);
+            player.RemoveWeapons();
+            if (bombcarrier)
+            {
+                player.GiveNamedItem(CsItem.C4);
+            }
         }
     }
 }

@@ -45,10 +45,12 @@ public class CS2CustomRounds : BasePlugin
         new ReloadSwitchRound(),
         new InvisibleRound(),
         new IceFloorRound(),
+        new BigPlayersRound(),
+        new SmallPlayerRound(),
     };
 
 
-    public CustomRound SelectedCustomRound { get; set; } = new InvisibleRound();
+    public CustomRound SelectedCustomRound { get; set; } = new SmallPlayerRound();
 
     public override void Load(bool hotReload)
     {
@@ -68,6 +70,7 @@ public class CS2CustomRounds : BasePlugin
 
         ShowRoundStartMessage();
         ShowRoundDescription();
+        SetParametersStartRound();
         SelectedCustomRound.RoundStart();
         return HookResult.Continue;
 
@@ -219,6 +222,20 @@ public class CS2CustomRounds : BasePlugin
         {
             Server.ExecuteCommand("mp_freezetime 0");
             Server.ExecuteCommand("mp_buytime 0");
+        }
+    }
+
+    private void SetParametersStartRound()
+    {
+        if(!SelectedCustomRound.BuyAllowed)
+        {
+            foreach (var player in Utilities.GetPlayers())
+            { 
+                if (player != null)
+                {
+                    player.GiveNamedItem(CsItem.KevlarHelmet);
+                }
+            }
         }
     }
     private int Index { get; set; } = 0;

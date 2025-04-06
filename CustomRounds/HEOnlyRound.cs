@@ -29,7 +29,7 @@ namespace CS2CustomRoundsPlugin
                     pawn.Health = 200;
                 }
 
-                player.RemoveWeapons();
+                CommonFunc.RemoveWeapons(player);
                 player.GiveNamedItem(CsItem.HEGrenade);
                 player.GiveNamedItem(CsItem.Knife);
             }

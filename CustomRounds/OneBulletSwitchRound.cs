@@ -32,13 +32,8 @@ namespace CS2CustomRoundsPlugin
                 var pawn = player.PlayerPawn.Value;
                 if (pawn != null)
                 {
-                    var bombcarrier = CommonFunc.PlayerHasBomb(player);
-                    player.RemoveWeapons();
+                    CommonFunc.RemoveWeapons(player);
                     player.GiveNamedItem(WeaponsSet.AllGuns.ElementAt(rand.Next(WeaponsSet.AllGuns.Count)));
-                    if (bombcarrier)
-                    {
-                        player.GiveNamedItem(CsItem.C4);
-                    }
                 }
 
             }

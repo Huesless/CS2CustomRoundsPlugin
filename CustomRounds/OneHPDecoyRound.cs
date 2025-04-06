@@ -36,7 +36,7 @@ namespace CS2CustomRoundsPlugin
                     
                 }
                 
-                player.RemoveWeapons();
+                CommonFunc.RemoveWeapons(player);
                 player.GiveNamedItem(CsItem.Decoy);
                 player.GiveNamedItem(CsItem.Knife);
                 

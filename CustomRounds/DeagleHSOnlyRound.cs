@@ -21,7 +21,7 @@ namespace CS2CustomRoundsPlugin
                     continue;
 
 
-                player.RemoveWeapons();
+                CommonFunc.RemoveWeapons(player);
                 player.GiveNamedItem(CsItem.Deagle);
 
             }

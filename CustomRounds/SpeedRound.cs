@@ -9,6 +9,7 @@ namespace CS2CustomRoundsPlugin
 {
     public class SpeedRound : CustomRound
     {
+        //TO DO recall on playerhurt
         public override string RoundStartDescription => "Everyone has the zoomies. You are fast.";
         public override string RoundStartMessage => "You are SPEED";
         public override void RoundStart()
