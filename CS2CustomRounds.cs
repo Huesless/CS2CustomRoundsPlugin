@@ -4,6 +4,7 @@ using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Modules.Entities.Constants;
 using CounterStrikeSharp.API.Modules.Utils;
 using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 
@@ -21,47 +22,49 @@ public class CS2CustomRounds : BasePlugin
     public override string ModuleVersion => "0.0.1";
 
     public bool WarmupEnded { get; set; } = false;
+    private static bool LoggingCoordinates = false;
+    private static bool TestingCoordinates = false;
     public List<CustomRound> CustomRounds { get; set; } = new List<CustomRound>()
     {
 
-        new BombermanRound(),
-        new SpeedRound(),
-        new OneHPDecoyRound(),
-        new DeagleHSOnlyRound(),
-        new RandomSpawnRound(),
-        new TeamReloadRound(),
-        new TPOnHitRound(),
-        new TPOnKillRound(),
-        new DropWeaponOnMissRound(),
-        new TPGunRound(),
-        new TankyRound(),
-        new HEOnlyRound(),
-        new WallHackRound(),
-        new BounceRound(),
-        new TPlantAnywhereRound(),
-        new LowGravityRound(),
-        new RandomLoadoutRound(),
-        new OneBulletSwitchRound(),
-        new ReloadSwitchRound(),
+        //new BombermanRound(),
+        //new SpeedRound(),
+        //new OneHPDecoyRound(),
+        //new DeagleHSOnlyRound(),
+        //new RandomSpawnRound(),
+        //new TeamReloadRound(),
+        //new TPOnHitRound(),
+        //new TPOnKillRound(),
+        //new DropWeaponOnMissRound(),
+        //new TPGunRound(),
+        //new TankyRound(),
+        //new HEOnlyRound(),
+        //new WallHackRound(),
+        //new BounceRound(),
+        //new TPlantAnywhereRound(),
+        //new LowGravityRound(),
+        //new RandomLoadoutRound(),
+        //new OneBulletSwitchRound(),
+        //new ReloadSwitchRound(),
         new InvisibleRound(),
-        new IceFloorRound(),
+        //new IceFloorRound(),
         new BigPlayersRound(),
         new SmallPlayerRound(),
     };
 
 
-    public CustomRound SelectedCustomRound { get; set; } = new SmallPlayerRound();
+    public CustomRound SelectedCustomRound { get; set; } = new BombermanRound();
 
     public override void Load(bool hotReload)
     {
         CreateCommands();
-        Server.ExecuteCommand("mp_warmuptime 999999");
-        
     }
 
     [GameEventHandler]
     public HookResult OnRoundPreStart(EventRoundPrestart @event, GameEventInfo info)
     {
+        Server.ExecuteCommand("mp_warmuptime 999999");
+        Server.ExecuteCommand("sv_logfile 0");
         return HookResult.Continue;
     }
     [GameEventHandler]
@@ -111,8 +114,8 @@ public class CS2CustomRounds : BasePlugin
         return HookResult.Continue;
     }
 
-    [GameEventHandler]
-    public HookResult OnBombExplode(EventBombExploded @event, GameEventInfo info)
+    [GameEventHandler(HookMode.Pre)]
+    public HookResult OnBombExplode(EventBombBeginplant @event, GameEventInfo info)
     {
         //Server.ExecuteCommand("mp_ignore_round_win_conditions false");
         //foreach (var ent in Utilities.GetAllEntities())
@@ -123,18 +126,24 @@ public class CS2CustomRounds : BasePlugin
         return HookResult.Continue;
     }
 
-    [GameEventHandler]
+    [GameEventHandler(HookMode.Pre)]
     public HookResult OnPlayerDeath(EventPlayerDeath @event, GameEventInfo info)
     {
         SelectedCustomRound.PlayerDeath(@event);
-        return HookResult.Handled;
+        return HookResult.Continue;
     }
 
     [GameEventHandler]
     public HookResult OnPlayerHit(EventPlayerHurt @event, GameEventInfo info)
     {
         SelectedCustomRound.PlayerHurt(@event);
-
+        //var csEntities = Utilities.FindAllEntitiesByDesignerName<CBaseEntity>("cs_gamerules").ToArray();
+        //foreach (var entity in csEntities)
+        //{
+        //    Server.PrintToChatAll("Rules terminate");
+        //    var gameRules = entity.As<CCSGameRules>();
+        //    gameRules.TerminateRound(1, RoundEndReason.BombDefused);
+        //}
 
         return HookResult.Continue;
     }
@@ -151,7 +160,16 @@ public class CS2CustomRounds : BasePlugin
     [GameEventHandler]
     public HookResult OnPlayerShoot(EventWeaponFire @event, GameEventInfo info)
     {
+        if (LoggingCoordinates)
+        {
+            LogCoordinate(@event.Userid);
+        }
+        if (TestingCoordinates)
+        {
+            TpNext(@event.Userid);
+        }
         SelectedCustomRound.WeaponFire(@event);
+
         return HookResult.Continue;
     }
 
@@ -261,22 +279,8 @@ public class CS2CustomRounds : BasePlugin
         AddCommand("css_tp", "A test command",
         (player, info) =>
         {
-            if (player == null) return;
-            string mapName = NativeAPI.GetMapName();
-            var coords = ValidMapCoordinates.ValidMapCoordinatesDict[mapName].Select(innerList => new List<double>(innerList)).ToList();
-            if (Index >= coords.Count)
-            {
-                Index = 0;
-            }
-            var coord = coords[Index];
-            Vector vector = new Vector((float)coord[0], (float)coord[1], (float)coord[2] + 20);
-            var pawn = player.PlayerPawn.Get();
+            TpNext(player);
 
-            if (pawn != null)
-            {
-                pawn.Teleport(vector);
-            }
-            Index++;
         });
 
         AddCommand("css_start", "A test command",
@@ -286,7 +290,50 @@ public class CS2CustomRounds : BasePlugin
             WarmupEnded = true;
 
         });
+
+        AddCommand("css_printcoordinates", "A test command",
+        (player, info) =>
+        {
+            string result = "[" + string.Join(",", CoordinateLog.Select(innerList => "[" + string.Join(",", innerList) + "]")) + "]";
+            Server.PrintToConsole(result);
+            Server.PrintToChatAll(result);
+
+        });
     }
+    public List<List<double>> CoordinateLog { get; set; } = new List<List<double>>();
+    public void LogCoordinate(CCSPlayerController? player)
+    {
+        if (player == null) return;
+        var pawn = player.PlayerPawn.Get();
+        if (pawn != null)
+        {
+            Vector? vector = pawn.AbsOrigin;
+            if(vector != null)
+            {
+                CoordinateLog.Add(new List<double>() { vector.X, vector.Y, vector.Z});
+            }
+        }
+    }
+    public void TpNext(CCSPlayerController? player)
+    {
+        if (player == null) return;
+        string mapName = NativeAPI.GetMapName();
+        var coords = ValidMapCoordinates.ValidMapCoordinatesDict[mapName].Select(innerList => new List<double>(innerList)).ToList();
+        if (Index >= coords.Count)
+        {
+            Index = 0;
+        }
+        var coord = coords[Index];
+        Vector vector = new Vector((float)coord[0], (float)coord[1], (float)coord[2]);
+        var pawn = player.PlayerPawn.Get();
+
+        if (pawn != null)
+        {
+            pawn.Teleport(vector);
+        }
+        Index++;
+    }
+
 
 
 }

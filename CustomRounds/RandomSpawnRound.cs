@@ -29,7 +29,7 @@ namespace CS2CustomRoundsPlugin
 
                         Random random = new Random();
                         List<double> coord = coords[random.Next(0, coords.Count())];
-                        Vector vector = new Vector((float)coord[0], (float)coord[1], (float)coord[2]+20);
+                        Vector vector = new Vector((float)coord[0], (float)coord[1], (float)coord[2]+1);
                         coords.Remove(coord);
                         pawn.Teleport(vector);
                     }
