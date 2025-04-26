@@ -27,33 +27,33 @@ public class CS2CustomRounds : BasePlugin
     public List<CustomRound> CustomRounds { get; set; } = new List<CustomRound>()
     {
 
-        //new BombermanRound(),
-        //new SpeedRound(),
-        //new OneHPDecoyRound(),
-        //new DeagleHSOnlyRound(),
-        //new RandomSpawnRound(),
-        //new TeamReloadRound(),
-        //new TPOnHitRound(),
-        //new TPOnKillRound(),
-        //new DropWeaponOnMissRound(),
-        //new TPGunRound(),
-        //new TankyRound(),
-        //new HEOnlyRound(),
-        //new WallHackRound(),
-        //new BounceRound(),
-        //new TPlantAnywhereRound(),
-        //new LowGravityRound(),
-        //new RandomLoadoutRound(),
-        //new OneBulletSwitchRound(),
-        //new ReloadSwitchRound(),
+        new BombermanRound(),
+        new SpeedRound(),
+        new OneHPDecoyRound(),
+        new DeagleHSOnlyRound(),
+        new RandomSpawnRound(),
+        new TeamReloadRound(),
+        new TPOnHitRound(),
+        new TPOnKillRound(),
+        new DropWeaponOnMissRound(),
+        new TPGunRound(),
+        new TankyRound(),
+        new HEOnlyRound(),
+        new WallHackRound(),
+        new BounceRound(),
+        new TPlantAnywhereRound(),
+        new LowGravityRound(),
+        new RandomLoadoutRound(),
+        new OneBulletSwitchRound(),
+        new ReloadSwitchRound(),
         new InvisibleRound(),
-        //new IceFloorRound(),
+        new IceFloorRound(),
         new BigPlayersRound(),
         new SmallPlayerRound(),
     };
 
 
-    public CustomRound SelectedCustomRound { get; set; } = new BombermanRound();
+    public CustomRound SelectedCustomRound { get; set; } = new SpeedRound();
 
     public override void Load(bool hotReload)
     {
@@ -61,10 +61,20 @@ public class CS2CustomRounds : BasePlugin
     }
 
     [GameEventHandler]
+    public HookResult OnWarmupEnd(EventWarmupEnd @event, GameEventInfo info)
+    {
+        WarmupEnded = true;
+        Server.ExecuteCommand("mp_startmoney 16000");
+        Server.ExecuteCommand("mp_afterroundmoney 16000");
+        Server.ExecuteCommand("mp_freezetime 15");
+        return HookResult.Continue;
+    }
+    [GameEventHandler]
     public HookResult OnRoundPreStart(EventRoundPrestart @event, GameEventInfo info)
     {
         Server.ExecuteCommand("mp_warmuptime 999999");
-        Server.ExecuteCommand("sv_logfile 0");
+
+        RandomSelectRound();
         return HookResult.Continue;
     }
     [GameEventHandler]
@@ -83,7 +93,6 @@ public class CS2CustomRounds : BasePlugin
     public HookResult OnRoundEnd(EventRoundEnd @event, GameEventInfo info)
     {
         SelectedCustomRound.RoundEnd();
-        RandomSelectRound();
         SetParametersNextRound();
         return HookResult.Continue;
     }
@@ -233,13 +242,15 @@ public class CS2CustomRounds : BasePlugin
     {
         if (SelectedCustomRound.BuyAllowed)
         {
-            Server.ExecuteCommand("mp_freezetime 15");
             Server.ExecuteCommand("mp_buytime 20");
         }
         else
         {
-            Server.ExecuteCommand("mp_freezetime 0");
             Server.ExecuteCommand("mp_buytime 0");
+            foreach (var player in Utilities.GetPlayers())
+            {
+                player.GiveNamedItem(CsItem.KevlarHelmet);
+            }
         }
     }
 
@@ -286,6 +297,9 @@ public class CS2CustomRounds : BasePlugin
         AddCommand("css_start", "A test command",
         (player, info) =>
         {
+            Server.ExecuteCommand("mp_startmoney 16000");
+            Server.ExecuteCommand("mp_afterroundmoney 16000");
+            Server.ExecuteCommand("mp_freezetime 15");
             Server.ExecuteCommand("mp_warmup_end");
             WarmupEnded = true;
 

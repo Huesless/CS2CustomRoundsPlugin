@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Core;
 
 namespace CS2CustomRoundsPlugin
 {
@@ -16,25 +17,6 @@ namespace CS2CustomRoundsPlugin
         {
             
             Server.ExecuteCommand("sv_infinite_ammo 2");
-
-            foreach (var player in Utilities.GetPlayers())
-            {
-                if (player == null || !player.IsValid)
-                    continue;
-                var pawn = player.PlayerPawn.Get();
-
-                if (pawn != null)
-                {
-                    pawn.MaxHealth = 200;
-                    pawn.Health = 200;
-                }
-
-                CommonFunc.RemoveWeapons(player);
-                player.GiveNamedItem(CsItem.HEGrenade);
-                player.GiveNamedItem(CsItem.Knife);
-            }
-
-
 
         }
         public override void RoundEnd()
@@ -57,7 +39,25 @@ namespace CS2CustomRoundsPlugin
             Server.ExecuteCommand("sv_infinite_ammo 0");
         }
 
+        public override void FreezeTimeEnd(EventRoundFreezeEnd @event)
+        {
+            foreach (var player in Utilities.GetPlayers())
+            {
+                if (player == null || !player.IsValid)
+                    continue;
+                var pawn = player.PlayerPawn.Get();
 
+                if (pawn != null)
+                {
+                    pawn.MaxHealth = 200;
+                    pawn.Health = 200;
+                }
+
+                CommonFunc.RemoveWeapons(player);
+                player.GiveNamedItem(CsItem.HEGrenade);
+                player.GiveNamedItem(CsItem.Knife);
+            }
+        }
         public override string RoundStartDescription => "HE grenades only.";
         
 

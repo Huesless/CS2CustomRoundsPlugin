@@ -10,7 +10,7 @@ namespace CS2CustomRoundsPlugin
 {
     public class SpeedRound : CustomRound
     {
-        //TO DO recall on playerhurt
+        //TO DO fix losing speed on tag
         public override string RoundStartDescription => "Everyone has the zoomies. You are fast.";
         public override string RoundStartMessage => "You are SPEED";
         public override void RoundStart()
@@ -25,6 +25,7 @@ namespace CS2CustomRoundsPlugin
                     pawn.VelocityModifier = 2.5f;
                     
                 }
+                Server.ExecuteCommand("mp_tagging_scale 9999");
                 //Server.ExecuteCommand("sv_accelerate 1000");
                 //Server.ExecuteCommand("sv_maxvelocity 9000");
             }
@@ -41,23 +42,24 @@ namespace CS2CustomRoundsPlugin
                 {
                     pawn.VelocityModifier = 1;
                 }
+                Server.ExecuteCommand("mp_tagging_scale 1");
                 //Server.ExecuteCommand("sv_accelerate 5.5");
                 //Server.ExecuteCommand("sv_maxvelocity 3500");
             }
         }
 
-        public override void PlayerHurt(EventPlayerHurt @event)
-        {
-            var player = @event.Userid;
-            if(player != null)
-            {
+        //public override void PlayerHurt(EventPlayerHurt @event)
+        //{
+        //    var player = @event.Userid;
+        //    if(player != null)
+        //    {
                 
-                var pawn = player.PlayerPawn.Get();
-                if (pawn != null)
-                {
-                    pawn.VelocityModifier = 2.5f;
-                }
-            }
-        }
+        //        var pawn = player.PlayerPawn.Get();
+        //        if (pawn != null)
+        //        {
+        //            pawn.VelocityModifier = 2.5f;
+        //        }
+        //    }
+        //}
     }
 }

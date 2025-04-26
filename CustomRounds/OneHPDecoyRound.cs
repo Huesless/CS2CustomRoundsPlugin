@@ -35,12 +35,6 @@ namespace CS2CustomRoundsPlugin
                     //Utilities.SetStateChanged(pawn, "CBaseEntity", "m_iHealth");
                     
                 }
-                
-                CommonFunc.RemoveWeapons(player);
-                player.GiveNamedItem(CsItem.Decoy);
-                player.GiveNamedItem(CsItem.Knife);
-                
-
             }
             Server.ExecuteCommand("mp_freezetime 0");
             Server.ExecuteCommand("mp_buytime 0");
@@ -54,7 +48,19 @@ namespace CS2CustomRoundsPlugin
             Server.ExecuteCommand("sv_infinite_ammo 0");
         }
 
+        public override void FreezeTimeEnd(EventRoundFreezeEnd @event)
+        {
+            foreach (var player in Utilities.GetPlayers())
+            {
+                if (player == null || !player.IsValid)
+                    continue;
+                CommonFunc.RemoveWeapons(player);
+                player.GiveNamedItem(CsItem.Decoy);
+                player.GiveNamedItem(CsItem.Knife);
+            }
+        }
 
-        
+
+
     }
 }

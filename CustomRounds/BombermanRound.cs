@@ -18,14 +18,6 @@ namespace CS2CustomRoundsPlugin
             Server.ExecuteCommand("mp_plant_c4_anywhere true");
             //Server.ExecuteCommand("mp_ignore_round_win_conditions true");
 
-            foreach (var player in Utilities.GetPlayers())
-            {
-                if (player == null || !player.IsValid)
-                    continue;
-                player.RemoveWeapons();
-                player.GiveNamedItem(CsItem.C4);
-
-            }
         }
         public override void RoundEnd()
         {
@@ -42,7 +34,16 @@ namespace CS2CustomRoundsPlugin
             }
         }
 
-
+        public override void FreezeTimeEnd(EventRoundFreezeEnd @event)
+        {
+            foreach (var player in Utilities.GetPlayers())
+            {
+                if (player == null || !player.IsValid)
+                    continue;
+                player.RemoveWeapons();
+                player.GiveNamedItem(CsItem.C4);
+            }
+        }
         public override void BombPlant(CCSPlayerController player)
         {
             if (player != null && player.IsValid)

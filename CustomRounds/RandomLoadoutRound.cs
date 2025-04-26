@@ -16,6 +16,14 @@ namespace CS2CustomRoundsPlugin
         public override string RoundStartDescription => "Start with a random loadout.";
         public override void RoundStart()
         {
+            return;
+        }
+        public override void RoundEnd()
+        {
+            return;
+        }
+        public override void FreezeTimeEnd(EventRoundFreezeEnd @event)
+        {
             foreach (var player in Utilities.GetPlayers())
             {
                 if (player == null || !player.IsValid)
@@ -28,15 +36,9 @@ namespace CS2CustomRoundsPlugin
                 player.GiveNamedItem(WeaponsSet.Knife.ElementAt(rand.Next(WeaponsSet.Knife.Count)));
                 player.GiveNamedItem(WeaponsSet.Grenades.ElementAt(rand.Next(WeaponsSet.Grenades.Count)));
 
-
-
             }
         }
-        public override void RoundEnd()
-        {
-            return;
-        }
 
-        
+
     }
 }
