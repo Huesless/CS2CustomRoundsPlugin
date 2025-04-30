@@ -6,6 +6,7 @@ using CounterStrikeSharp.API.Modules.Utils;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using CounterStrikeSharp.API.Modules.Timers;
 
 
 namespace CS2CustomRoundsPlugin;
@@ -24,11 +25,21 @@ public class CS2CustomRounds : BasePlugin
     public bool WarmupEnded { get; set; } = false;
     private static bool LoggingCoordinates = false;
     private static bool TestingCoordinates = false;
-    public List<CustomRound> CustomRounds { get; set; } = new List<CustomRound>()
-    {
+    public List<CustomRound> CustomRounds { get; set; } = new List<CustomRound>();
+    public List<CustomRound>? CustomRoundsPool { get; set; }
 
-        new BombermanRound(),
-        new SpeedRound(),
+
+    public CustomRound SelectedCustomRound { get; set; } = new SpeedRound();
+
+    public void SetCustomRoundsList()
+    {
+        CustomRounds = new List<CustomRound>()
+        {
+        //Don't work perfectly yet
+        //new BombermanRound(),
+        //new SpeedRound(),
+        //new CommanderRound(),
+
         new OneHPDecoyRound(),
         new DeagleHSOnlyRound(),
         new RandomSpawnRound(),
@@ -50,31 +61,34 @@ public class CS2CustomRounds : BasePlugin
         new IceFloorRound(),
         new BigPlayersRound(),
         new SmallPlayerRound(),
-    };
 
+        new SchizoRound(this)
 
-    public CustomRound SelectedCustomRound { get; set; } = new SpeedRound();
+        };
+    }
 
     public override void Load(bool hotReload)
     {
+        RegisterListener<Listeners.OnServerPrecacheResources>((manifest) =>
+        {
+            manifest.AddResource("models/hostage/hostage.vmdl");
+            manifest.AddResource("models/hostage/hostage_carry.vmdl");
+
+        });
         CreateCommands();
     }
 
     [GameEventHandler]
     public HookResult OnWarmupEnd(EventWarmupEnd @event, GameEventInfo info)
     {
-        WarmupEnded = true;
-        Server.ExecuteCommand("mp_startmoney 16000");
-        Server.ExecuteCommand("mp_afterroundmoney 16000");
-        Server.ExecuteCommand("mp_freezetime 15");
+        Start();
         return HookResult.Continue;
     }
     [GameEventHandler]
     public HookResult OnRoundPreStart(EventRoundPrestart @event, GameEventInfo info)
     {
-        Server.ExecuteCommand("mp_warmuptime 999999");
-
         RandomSelectRound();
+        SetParametersNextRound();
         return HookResult.Continue;
     }
     [GameEventHandler]
@@ -93,7 +107,7 @@ public class CS2CustomRounds : BasePlugin
     public HookResult OnRoundEnd(EventRoundEnd @event, GameEventInfo info)
     {
         SelectedCustomRound.RoundEnd();
-        SetParametersNextRound();
+        CustomRoundsPool?.Remove(SelectedCustomRound);
         return HookResult.Continue;
     }
 
@@ -215,9 +229,14 @@ public class CS2CustomRounds : BasePlugin
     {
         if (WarmupEnded)
         {
+
+            if(CustomRoundsPool == null || CustomRoundsPool.Count == 0)
+            {
+                CustomRoundsPool = CustomRounds.ToArray().ToList();
+            }
             Random random = new Random();
-            int index = random.Next(0, CustomRounds.Count);
-            SelectedCustomRound = CustomRounds[index];
+            int index = random.Next(0, CustomRoundsPool.Count);
+            SelectedCustomRound = CustomRoundsPool[index];
         }
     }
     private void ShowRoundStartMessage()
@@ -243,6 +262,7 @@ public class CS2CustomRounds : BasePlugin
         if (SelectedCustomRound.BuyAllowed)
         {
             Server.ExecuteCommand("mp_buytime 20");
+            Server.ExecuteCommand("mp_death_drop_gun 1");
         }
         else
         {
@@ -251,6 +271,7 @@ public class CS2CustomRounds : BasePlugin
             {
                 player.GiveNamedItem(CsItem.KevlarHelmet);
             }
+            Server.ExecuteCommand("mp_death_drop_gun 0");
         }
     }
 
@@ -297,11 +318,7 @@ public class CS2CustomRounds : BasePlugin
         AddCommand("css_start", "A test command",
         (player, info) =>
         {
-            Server.ExecuteCommand("mp_startmoney 16000");
-            Server.ExecuteCommand("mp_afterroundmoney 16000");
-            Server.ExecuteCommand("mp_freezetime 15");
-            Server.ExecuteCommand("mp_warmup_end");
-            WarmupEnded = true;
+            Start();
 
         });
 
@@ -347,7 +364,44 @@ public class CS2CustomRounds : BasePlugin
         }
         Index++;
     }
+    public void Start()
+    {
+        SetCustomRoundsList();
+        Server.ExecuteCommand("mp_maxmoney 16000");
+        Server.ExecuteCommand("mp_startmoney 16000");
+        Server.ExecuteCommand("mp_afterroundmoney 16000");
+        Server.ExecuteCommand("mp_freezetime 15");
+        Server.ExecuteCommand("mp_warmup_end");
+        Server.ExecuteCommand("bot_quota 1");
+        Server.ExecuteCommand("bot_quota_mode normal");
+        Server.ExecuteCommand("mp_winlimit 13");
+        WarmupEnded = true;
 
+    }
 
+    //private CounterStrikeSharp.API.Modules.Timers.Timer? _randomTimer;
 
+    //private void ScheduleNextRandomEvent()
+    //{
+        
+    //    float delay = Random.Shared.NextSingle() * 4f + 1f;
+
+    //    _randomTimer = AddTimer(delay, () =>
+    //    {
+    //        RunRandomEvent();       
+    //        ScheduleNextRandomEvent(); 
+    //    });
+    //}
+
+    //private void RunRandomEvent()
+    //{
+    //    foreach (var player in Utilities.GetPlayers())
+    //    {
+    //        if (player == null || !player.IsValid)
+    //            continue;
+    //        var pawn = player.PlayerPawn.Get();
+    //        pawn!.AddEntityIOEvent("SetHealth", null, null, (pawn.Health - 1).ToString());
+    //        pawn!.AddEntityIOEvent("SetHealth", null, null, (pawn.Health + 1).ToString());
+    //    }
+    //}
 }

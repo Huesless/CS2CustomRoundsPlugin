@@ -48,18 +48,18 @@ namespace CS2CustomRoundsPlugin
             }
         }
 
-        //public override void PlayerHurt(EventPlayerHurt @event)
-        //{
-        //    var player = @event.Userid;
-        //    if(player != null)
-        //    {
-                
-        //        var pawn = player.PlayerPawn.Get();
-        //        if (pawn != null)
-        //        {
-        //            pawn.VelocityModifier = 2.5f;
-        //        }
-        //    }
-        //}
+        public override void PlayerHurt(EventPlayerHurt @event)
+        {
+            var player = @event.Userid;
+            if (player != null)
+            {
+
+                var pawn = player.PlayerPawn.Get();
+                if (pawn != null)
+                {
+                    pawn.VelocityModifier = 2.5f;
+                }
+            }
+        }
     }
 }

@@ -31,6 +31,7 @@ namespace CS2CustomRoundsPlugin
         {
             var bombcarrier = CommonFunc.PlayerHasBomb(player);
             player.RemoveWeapons();
+            player.GiveNamedItem(CsItem.KevlarHelmet);
             if (bombcarrier)
             {
                 player.GiveNamedItem(CsItem.C4);

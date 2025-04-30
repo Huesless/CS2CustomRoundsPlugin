@@ -16,7 +16,7 @@ namespace CS2CustomRoundsPlugin
             Server.ExecuteCommand("mp_c4_cannot_be_defused true");
             Server.ExecuteCommand("mp_c4timer 20");
             Server.ExecuteCommand("mp_plant_c4_anywhere true");
-            //Server.ExecuteCommand("mp_ignore_round_win_conditions true");
+            Server.ExecuteCommand("mp_ignore_round_win_conditions true");
 
         }
         public override void RoundEnd()
@@ -25,7 +25,7 @@ namespace CS2CustomRoundsPlugin
             Server.ExecuteCommand("mp_c4_cannot_be_defused false");
             Server.ExecuteCommand("mp_c4timer 40");
             Server.ExecuteCommand("mp_plant_c4_anywhere false");
-            //Server.ExecuteCommand("mp_ignore_round_win_conditions false");
+            Server.ExecuteCommand("mp_ignore_round_win_conditions false");
 
             foreach (var player in Utilities.GetPlayers())
             {
@@ -59,7 +59,7 @@ namespace CS2CustomRoundsPlugin
             if (player != null && @event.Weapon == "planted_c4")
             {
                 Server.PrintToChatAll(@event.Weapon);
-                Server.ExecuteCommand("mp_ignore_round_win_conditions false");
+                //Server.ExecuteCommand("mp_ignore_round_win_conditions false");
 
                 Server.NextWorldUpdate(() =>
                 {
