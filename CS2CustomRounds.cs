@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Entities;
+using CounterStrikeSharp.API.Modules.Admin;
 
 
 namespace CS2CustomRoundsPlugin;
@@ -41,15 +42,18 @@ public class CS2CustomRounds : BasePlugin
             //new SpeedRound(),
             //new InvertedControlsRound(),
 
-            //new OneHPDecoyRound(),
+            //Boring/not that interesting
+            
+            //new TankyRound(),
+
             //new DeagleHSOnlyRound(),
+            //new OneHPDecoyRound(),
             //new RandomSpawnRound(),
             //new TeamReloadRound(),
             //new TPOnHitRound(),
             //new TPOnKillRound(),
             //new DropWeaponOnMissRound(),
             //new TPGunRound(),
-            //new TankyRound(),
             //new HEOnlyRound(),
             //new WallHackRound(),
             //new BounceRound(),
@@ -68,6 +72,7 @@ public class CS2CustomRounds : BasePlugin
             //new CommanderRound(),
             //new KnockBackRound(),
             new SpectreRound(),
+            //new DashRound(),
 
         };
     }
@@ -80,7 +85,12 @@ public class CS2CustomRounds : BasePlugin
             manifest.AddResource("models/hostage/hostage_carry.vmdl");
 
         });
+        RegisterListener<Listeners.OnTick>(() =>
+        {
+            SelectedCustomRound.OnTick();
+        });
         CreateCommands();
+
     }
 
     [GameEventHandler]
@@ -249,16 +259,25 @@ public class CS2CustomRounds : BasePlugin
     public HookResult InspectWeapon(EventInspectWeapon @event, GameEventInfo info)
     {
         //doesn't work
+        Server.PrintToChatAll("inspect");
         SelectedCustomRound.InspectWeapon(@event);
         return HookResult.Continue;
     }
 
     [GameEventHandler]
-    public HookResult InspectWeapon(EventPlayerPing @event, GameEventInfo info)
+    public HookResult PlayerPing(EventPlayerPing @event, GameEventInfo info)
     {
         SelectedCustomRound.PlayerPing(@event);
         return HookResult.Continue;
     }
+    [GameEventHandler]
+    public HookResult PlayerJump(EventPlayerJump @event, GameEventInfo info)
+    {
+        SelectedCustomRound.PlayerJump(@event);
+        return HookResult.Continue;
+    }
+
+
     private void RandomSelectRound()
     {
         if (WarmupEnded)

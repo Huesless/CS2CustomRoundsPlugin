@@ -73,6 +73,14 @@ namespace CS2CustomRoundsPlugin
         {
             return;
         }
+        public virtual void PlayerJump(EventPlayerJump @event)
+        {
+            return;
+        }
+        public virtual void OnTick()
+        {
+            return;
+        }
 
         public override string ToString()
         {
