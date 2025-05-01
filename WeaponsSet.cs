@@ -121,6 +121,16 @@ namespace CS2CustomRoundsPlugin
             "weapon_g3sg1"
 
         };
+        public static HashSet<string> BigKnockback = new HashSet<string>
+        {
+            "weapon_awp",
+            "weapon_xm1014",
+            "weapon_nova",
+            "weapon_mag7",
+            "weapon_sawedoff",
+            "weapon_sg556"
+
+        };
         public static HashSet<string> SecondaryWeapons = new HashSet<string>
         {
             "weapon_glock",

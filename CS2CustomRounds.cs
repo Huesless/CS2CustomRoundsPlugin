@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using CounterStrikeSharp.API.Modules.Timers;
+using CounterStrikeSharp.API.Modules.Entities;
 
 
 namespace CS2CustomRoundsPlugin;
@@ -29,7 +30,7 @@ public class CS2CustomRounds : BasePlugin
     public List<CustomRound>? CustomRoundsPool { get; set; }
 
 
-    public CustomRound SelectedCustomRound { get; set; } = new SpeedRound();
+    public CustomRound SelectedCustomRound { get; set; } = new NormalRound();
 
     public void SetCustomRoundsList()
     {
@@ -38,32 +39,35 @@ public class CS2CustomRounds : BasePlugin
             //Don't work perfectly yet
             //new BombermanRound(),
             //new SpeedRound(),
-            //new CommanderRound(),
             //new InvertedControlsRound(),
 
-            new OneHPDecoyRound(),
-            new DeagleHSOnlyRound(),
-            new RandomSpawnRound(),
-            new TeamReloadRound(),
-            new TPOnHitRound(),
-            new TPOnKillRound(),
-            new DropWeaponOnMissRound(),
-            new TPGunRound(),
-            new TankyRound(),
-            new HEOnlyRound(),
-            new WallHackRound(),
-            new BounceRound(),
-            new TPlantAnywhereRound(),
-            new LowGravityRound(),
-            new RandomLoadoutRound(),
-            new OneBulletSwitchRound(),
-            new ReloadSwitchRound(),
-            new InvisibleRound(),
-            new IceFloorRound(),
-            new BigPlayersRound(),
-            new SmallPlayerRound(),
-            new SchizoRound(this),
-            new SharedHPRound(),
+            //new OneHPDecoyRound(),
+            //new DeagleHSOnlyRound(),
+            //new RandomSpawnRound(),
+            //new TeamReloadRound(),
+            //new TPOnHitRound(),
+            //new TPOnKillRound(),
+            //new DropWeaponOnMissRound(),
+            //new TPGunRound(),
+            //new TankyRound(),
+            //new HEOnlyRound(),
+            //new WallHackRound(),
+            //new BounceRound(),
+            //new TPlantAnywhereRound(),
+            //new LowGravityRound(),
+            //new RandomLoadoutRound(),
+            //new OneBulletSwitchRound(),
+            //new ReloadSwitchRound(),
+            //new InvisibleRound(),
+            //new IceFloorRound(),
+            //new BigPlayersRound(),
+            //new SmallPlayerRound(),
+            //new SchizoRound(this),
+            //new SharedHPRound(),
+            //new TpOnFlashedRound(),
+            //new CommanderRound(),
+            //new KnockBackRound(),
+            new SpectreRound(),
 
         };
     }
@@ -184,6 +188,7 @@ public class CS2CustomRounds : BasePlugin
     [GameEventHandler]
     public HookResult OnPlayerShoot(EventWeaponFire @event, GameEventInfo info)
     {
+
         if (LoggingCoordinates)
         {
             LogCoordinate(@event.Userid);
@@ -224,6 +229,34 @@ public class CS2CustomRounds : BasePlugin
     public HookResult OnFreezeTimeEnd(EventRoundFreezeEnd @event, GameEventInfo info)
     {
         SelectedCustomRound.FreezeTimeEnd(@event);
+        return HookResult.Continue;
+    }
+    [GameEventHandler]
+    public HookResult OnPlayerBlind(EventPlayerBlind @event, GameEventInfo info)
+    {
+        SelectedCustomRound.PlayerBlind(@event);
+        return HookResult.Continue;
+    }
+    [GameEventHandler]
+    public HookResult DecoyStarted(EventDecoyStarted @event, GameEventInfo info)
+    {
+        
+        SelectedCustomRound.DecoyStarted(@event);
+        return HookResult.Continue;
+    }
+
+    [GameEventHandler]
+    public HookResult InspectWeapon(EventInspectWeapon @event, GameEventInfo info)
+    {
+        //doesn't work
+        SelectedCustomRound.InspectWeapon(@event);
+        return HookResult.Continue;
+    }
+
+    [GameEventHandler]
+    public HookResult InspectWeapon(EventPlayerPing @event, GameEventInfo info)
+    {
+        SelectedCustomRound.PlayerPing(@event);
         return HookResult.Continue;
     }
     private void RandomSelectRound()

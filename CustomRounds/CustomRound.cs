@@ -57,6 +57,23 @@ namespace CS2CustomRoundsPlugin
         {
             return;
         }
+        public virtual void PlayerBlind(EventPlayerBlind @event)
+        {
+            return;
+        }
+        public virtual void DecoyStarted(EventDecoyStarted @event)
+        {
+            return;
+        }
+        public virtual void InspectWeapon(EventInspectWeapon @event)
+        {
+            return;
+        }
+        public virtual void PlayerPing(EventPlayerPing @event)
+        {
+            return;
+        }
+
         public override string ToString()
         {
             return "Custom round";

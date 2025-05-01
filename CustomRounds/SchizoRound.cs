@@ -22,13 +22,14 @@ namespace CS2CustomRoundsPlugin
 
         public override void RoundStart()
         {
-            SpawnEntities();
+            
             RoundEnded = false;
 
         }
 
         public override void FreezeTimeEnd(EventRoundFreezeEnd @event)
         {
+            SpawnEntities();
             ScheduleNextRandomEvent();
             MoveEntitiesEvent();
         }
