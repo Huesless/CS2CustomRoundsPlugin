@@ -71,8 +71,8 @@ public class CS2CustomRounds : BasePlugin
             //new TpOnFlashedRound(),
             //new CommanderRound(),
             //new KnockBackRound(),
-            new SpectreRound(),
-            //new DashRound(),
+            //new SpectreRound(),
+            new DashRound(),
 
         };
     }
@@ -270,13 +270,6 @@ public class CS2CustomRounds : BasePlugin
         SelectedCustomRound.PlayerPing(@event);
         return HookResult.Continue;
     }
-    [GameEventHandler]
-    public HookResult PlayerJump(EventPlayerJump @event, GameEventInfo info)
-    {
-        SelectedCustomRound.PlayerJump(@event);
-        return HookResult.Continue;
-    }
-
 
     private void RandomSelectRound()
     {

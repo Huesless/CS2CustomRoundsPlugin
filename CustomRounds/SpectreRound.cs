@@ -13,7 +13,7 @@ namespace CS2CustomRoundsPlugin
     public class SpectreRound : CustomRound
     {
         public override string RoundStartMessage => "That one Shroud's game";
-        public override string RoundStartDescription => $"Decoys spawn a clone. Press E to switch positions with the clone. {cooldown} second cooldown.";
+        public override string RoundStartDescription => $"Decoys spawn a clone. Press E to switch positions with the clone. {cooldown} second cooldown. Doesn't switch when crouching (important for defuses).";
         public override void RoundEnd()
         {
             foreach(var pair in PlayerClonePair)
@@ -142,7 +142,7 @@ namespace CS2CustomRoundsPlugin
                 {
                     var buttons = player.Buttons;
                     var pawn = player.PlayerPawn.Value!;
-                    if ((buttons & PlayerButtons.Use) != 0 && (Server.TickedTime - CooldownManager[player.UserId.Value]) > cooldown)
+                    if ((buttons & PlayerButtons.Use) != 0 && (buttons & PlayerButtons.Duck) == 0 && (Server.TickedTime - CooldownManager[player.UserId.Value]) > cooldown)
                     {
                         Switch(player);
                         CooldownManager[player.UserId.Value] = Server.TickedTime;
