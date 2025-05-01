@@ -1,12 +1,6 @@
 ﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
 
 namespace CS2CustomRoundsPlugin
 {
@@ -14,7 +8,7 @@ namespace CS2CustomRoundsPlugin
     {
         private BasePlugin Plugin;
         public override string RoundStartMessage => "Schizophrenia mode";
-        public override string RoundStartDescription => "You're hearing things. It's all in your head. (MIGHT BE LOUD)";
+        public override string RoundStartDescription => "You're seeing and hearing things. It's all in your head. (MIGHT BE LOUD)";
         private bool RoundEnded { get; set; } = false;
         public SchizoRound(BasePlugin plugin)
         {
@@ -23,27 +17,23 @@ namespace CS2CustomRoundsPlugin
         public override void RoundEnd()
         {
             RoundEnded = true;
-            foreach (var item in SoundEmitterEntities)
-            {
-                if (item.IsValid)
-                {
-                    item.Remove();
-                }
-            }
+            RemoveEntites();
         }
 
         public override void RoundStart()
         {
             SpawnEntities();
             RoundEnded = false;
-            
+
         }
 
         public override void FreezeTimeEnd(EventRoundFreezeEnd @event)
         {
             ScheduleNextRandomEvent();
+            MoveEntitiesEvent();
         }
         private CounterStrikeSharp.API.Modules.Timers.Timer? _randomTimer;
+        private CounterStrikeSharp.API.Modules.Timers.Timer? _randomEntityTimer;
 
         private void ScheduleNextRandomEvent()
         {
@@ -56,25 +46,41 @@ namespace CS2CustomRoundsPlugin
                     RunRandomEvent();
                     ScheduleNextRandomEvent();
                 });
+
             }
 
         }
-        private int SchizoChance { get; set; } = 50;
+        private void MoveEntitiesEvent()
+        {
+            if (!RoundEnded)
+            {
+                float delay = Random.Shared.NextSingle() * 1.5f + 0.5f;
+
+                _randomEntityTimer = Plugin.AddTimer(delay, () =>
+                {
+                    MoveEntitiesEvent();
+                    MoveEntities();
+                });
+
+            }
+
+        }
+        private int SchizoChance { get; set; } = 100;
         private void RunRandomEvent()
         {
             foreach (var player in Utilities.GetPlayers())
             {
                 Random random = new Random();
-                
-                if (player == null || !player.IsValid || SchizoChance<random.Next(0, 100))
+
+                if (player == null || !player.IsValid || SchizoChance < random.Next(0, 100))
                     continue;
-                int eventIndex = random.Next(0,10);
+                int eventIndex = random.Next(0, 10);
                 switch (eventIndex)
                 {
                     case 0:
                         var pawn = player.PlayerPawn.Get();
                         pawn!.AddEntityIOEvent("SetHealth", null, null, (pawn.Health - 1).ToString());
-                        pawn!.AddEntityIOEvent("SetHealth", null, null, (pawn.Health + 1).ToString());
+                        //pawn!.AddEntityIOEvent("SetHealth", null, null, (pawn.Health + 1).ToString());
                         break;
                     default:
                         int soundIndex = random.Next(0, Sounds.Count);
@@ -84,7 +90,30 @@ namespace CS2CustomRoundsPlugin
             }
 
         }
-        private List<string> Models = new List<string>() 
+        private void MoveEntities()
+        {
+            if (!RoundEnded)
+            {
+                Random random = new Random();
+                var entity = SoundEmitterEntities[random.Next(0, SoundEmitterEntities.Count)];
+                var vector = entity.AbsOrigin;
+                entity.Teleport(new Vector(vector!.X + random.Next(-100, 100), vector.Y + random.Next(-100, 100), vector.Z + random.Next(-10, 10)));
+
+            }
+
+        }
+        private void RemoveEntites()
+        {
+            foreach (var item in SoundEmitterEntities)
+            {
+                if (item.IsValid)
+                {
+                    item.Remove();
+                }
+            }
+            SoundEmitterEntities.Clear();
+        }
+        private List<string> Models = new List<string>()
         {
             "characters/models/ctm_fbi/ctm_fbi.vmdl",
             "characters/models/ctm_sas/ctm_sas.vmdl",
@@ -99,7 +128,7 @@ namespace CS2CustomRoundsPlugin
             "models/hostage/hostage.vmdl",
             "models/hostage/hostage_carry.vmdl"
         };
-        private List<string> Sounds = new List<string>() 
+        private List<string> Sounds = new List<string>()
         {
             "weapons/flashbang/flashbang_explode2",
             "weapons/flashbang/flashbang_explode2_distant",
@@ -142,7 +171,7 @@ namespace CS2CustomRoundsPlugin
         private void SpawnEntities()
         {
             Random random = new Random();
-            foreach(var coord in ValidMapCoordinates.Coords)
+            foreach (var coord in ValidMapCoordinates.Coords)
             {
                 var prop = Utilities.CreateEntityByName<CDynamicProp>("prop_dynamic");
                 if (prop != null)
@@ -150,10 +179,10 @@ namespace CS2CustomRoundsPlugin
                     SoundEmitterEntities.Add(prop);
                     prop.Teleport(new Vector((float)coord[0], (float)coord[1], (float)coord[2]));
                     prop.DispatchSpawn();
-                    
+
                     prop.SetModel(Models[random.Next(0, Models.Count)]);
                 }
-                
+
             }
         }
     }

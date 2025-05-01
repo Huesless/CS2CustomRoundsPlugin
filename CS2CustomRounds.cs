@@ -35,34 +35,35 @@ public class CS2CustomRounds : BasePlugin
     {
         CustomRounds = new List<CustomRound>()
         {
-        //Don't work perfectly yet
-        //new BombermanRound(),
-        //new SpeedRound(),
-        //new CommanderRound(),
+            //Don't work perfectly yet
+            //new BombermanRound(),
+            //new SpeedRound(),
+            //new CommanderRound(),
+            //new InvertedControlsRound(),
 
-        new OneHPDecoyRound(),
-        new DeagleHSOnlyRound(),
-        new RandomSpawnRound(),
-        new TeamReloadRound(),
-        new TPOnHitRound(),
-        new TPOnKillRound(),
-        new DropWeaponOnMissRound(),
-        new TPGunRound(),
-        new TankyRound(),
-        new HEOnlyRound(),
-        new WallHackRound(),
-        new BounceRound(),
-        new TPlantAnywhereRound(),
-        new LowGravityRound(),
-        new RandomLoadoutRound(),
-        new OneBulletSwitchRound(),
-        new ReloadSwitchRound(),
-        new InvisibleRound(),
-        new IceFloorRound(),
-        new BigPlayersRound(),
-        new SmallPlayerRound(),
-
-        new SchizoRound(this)
+            new OneHPDecoyRound(),
+            new DeagleHSOnlyRound(),
+            new RandomSpawnRound(),
+            new TeamReloadRound(),
+            new TPOnHitRound(),
+            new TPOnKillRound(),
+            new DropWeaponOnMissRound(),
+            new TPGunRound(),
+            new TankyRound(),
+            new HEOnlyRound(),
+            new WallHackRound(),
+            new BounceRound(),
+            new TPlantAnywhereRound(),
+            new LowGravityRound(),
+            new RandomLoadoutRound(),
+            new OneBulletSwitchRound(),
+            new ReloadSwitchRound(),
+            new InvisibleRound(),
+            new IceFloorRound(),
+            new BigPlayersRound(),
+            new SmallPlayerRound(),
+            new SchizoRound(this),
+            new SharedHPRound(),
 
         };
     }
@@ -372,7 +373,7 @@ public class CS2CustomRounds : BasePlugin
         Server.ExecuteCommand("mp_afterroundmoney 16000");
         Server.ExecuteCommand("mp_freezetime 15");
         Server.ExecuteCommand("mp_warmup_end");
-        Server.ExecuteCommand("bot_quota 1");
+        Server.ExecuteCommand("bot_quota 10");
         Server.ExecuteCommand("bot_quota_mode normal");
         Server.ExecuteCommand("mp_winlimit 13");
         WarmupEnded = true;
