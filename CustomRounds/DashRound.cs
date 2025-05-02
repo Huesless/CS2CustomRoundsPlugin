@@ -40,10 +40,16 @@ namespace CS2CustomRoundsPlugin
                     {
                         CooldownManager[player.UserId.Value] = 0;
                     }
+                    if (!MessageCooldownManager.ContainsKey(player.UserId!.Value))
+                    {
+                        MessageCooldownManager[player.UserId.Value] = 0;
+                    }
                 }
                 
             }
         }
+        private double messageCooldown = 1;
+        private Dictionary<int, double> MessageCooldownManager = new Dictionary<int, double>();
         private double cooldown = 3;
         private Dictionary<int, double> CooldownManager = new Dictionary<int, double>();
         public override void OnTick()
@@ -59,26 +65,35 @@ namespace CS2CustomRoundsPlugin
                 {
                     var buttons = player.Buttons;
                     var pawn = player.PlayerPawn.Value!;
-                    if ((buttons & PlayerButtons.Use) != 0 && (buttons & PlayerButtons.Duck) == 0 && (Server.TickedTime - CooldownManager[player.UserId.Value]) > cooldown)
+                    if ((buttons & PlayerButtons.Use) != 0 && (buttons & PlayerButtons.Duck) == 0)
                     {
-                        if((buttons & PlayerButtons.Moveright) != 0)
+                        if((Server.TickedTime - CooldownManager[player.UserId.Value]) > cooldown)
                         {
-                            DashRight(player);
+                            if ((buttons & PlayerButtons.Moveright) != 0)
+                            {
+                                DashRight(player);
+                            }
+                            else if ((buttons & PlayerButtons.Moveleft) != 0)
+                            {
+                                DashLeft(player);
+                            }
+                            else if ((buttons & PlayerButtons.Back) != 0)
+                            {
+                                DashBack(player);
+                            }
+                            else
+                            {
+                                Dash(player);
+                            }
+
+                            CooldownManager[player.UserId.Value] = Server.TickedTime;
                         }
-                        else if((buttons & PlayerButtons.Moveleft) != 0)
-                        {
-                            DashLeft(player);
-                        }
-                        else if((buttons & PlayerButtons.Back) != 0)
-                        {
-                            DashBack(player);
-                        }
-                        else
-                        {
-                            Dash(player);
-                        }
-                        
-                        CooldownManager[player.UserId.Value] = Server.TickedTime;
+                        //else if ((Server.TickedTime - MessageCooldownManager[player.UserId.Value]) > messageCooldown)
+                        //{
+                        //    player.PrintToCenter($"Ability on cooldown: {(cooldown - (Server.TickedTime - CooldownManager[player.UserId.Value])).ToString("F")}");
+                        //    MessageCooldownManager[player.UserId.Value] = Server.TickedTime;
+                        //}
+
                     }
                 }
             }

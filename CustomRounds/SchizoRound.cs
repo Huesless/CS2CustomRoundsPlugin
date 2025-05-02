@@ -180,7 +180,7 @@ namespace CS2CustomRoundsPlugin
                     SoundEmitterEntities.Add(prop);
                     prop.Teleport(new Vector((float)coord[0], (float)coord[1], (float)coord[2]));
                     prop.DispatchSpawn();
-
+                    
                     prop.SetModel(Models[random.Next(0, Models.Count)]);
                 }
 

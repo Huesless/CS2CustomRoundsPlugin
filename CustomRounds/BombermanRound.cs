@@ -40,7 +40,7 @@ namespace CS2CustomRoundsPlugin
             {
                 if (player == null || !player.IsValid)
                     continue;
-                player.RemoveWeapons();
+                CommonFunc.RemoveWeapons(player);
                 player.GiveNamedItem(CsItem.C4);
             }
         }

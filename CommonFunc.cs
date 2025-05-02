@@ -1,4 +1,5 @@
-﻿using CounterStrikeSharp.API.Core;
+﻿using CounterStrikeSharp.API;
+using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Entities.Constants;
 using System;
 using System.Collections.Generic;
@@ -35,6 +36,26 @@ namespace CS2CustomRoundsPlugin
             if (bombcarrier)
             {
                 player.GiveNamedItem(CsItem.C4);
+            }
+        }
+
+        public static void RemoveAll(CCSPlayerController player)
+        {
+            //Doesn't work correctly
+            var pawn = player.PlayerPawn.Get();
+            if (pawn != null && pawn.WeaponServices != null)
+            {
+                foreach (var weapon in pawn.WeaponServices.MyWeapons)
+                {
+                    var weaponName = weapon.Value?.DesignerName;
+                    
+                    if (weaponName != null && WeaponsSet.AllWeapons.Contains(weaponName))
+                    {
+                        bool a = player.RemoveItemByDesignerName(weaponName, true);
+                        Server.PrintToChatAll(weaponName ?? "");
+                        Server.PrintToChatAll(a.ToString());
+                    }
+                }
             }
         }
     }

@@ -9,6 +9,8 @@ using System.Text.Json.Serialization;
 using CounterStrikeSharp.API.Modules.Timers;
 using CounterStrikeSharp.API.Modules.Entities;
 using CounterStrikeSharp.API.Modules.Admin;
+using System.Reflection;
+using System;
 
 
 namespace CS2CustomRoundsPlugin;
@@ -43,36 +45,38 @@ public class CS2CustomRounds : BasePlugin
             //new InvertedControlsRound(),
 
             //Boring/not that interesting
-            
             //new TankyRound(),
-
-            //new DeagleHSOnlyRound(),
-            //new OneHPDecoyRound(),
-            //new RandomSpawnRound(),
-            //new TeamReloadRound(),
-            //new TPOnHitRound(),
-            //new TPOnKillRound(),
-            //new DropWeaponOnMissRound(),
-            //new TPGunRound(),
-            //new HEOnlyRound(),
-            //new WallHackRound(),
             //new BounceRound(),
-            //new TPlantAnywhereRound(),
-            //new LowGravityRound(),
-            //new RandomLoadoutRound(),
-            //new OneBulletSwitchRound(),
-            //new ReloadSwitchRound(),
-            //new InvisibleRound(),
             //new IceFloorRound(),
-            //new BigPlayersRound(),
-            //new SmallPlayerRound(),
-            //new SchizoRound(this),
-            //new SharedHPRound(),
-            //new TpOnFlashedRound(),
-            //new CommanderRound(),
-            //new KnockBackRound(),
-            //new SpectreRound(),
+
+            new DeagleHSOnlyRound(),
+            new OneHPDecoyRound(),
+            new RandomSpawnRound(),
+            new TeamReloadRound(),
+            new TPOnHitRound(),
+            new TPOnKillRound(),
+            new DropWeaponOnMissRound(),
+            new TPGunRound(),
+            new HEOnlyRound(),
+            new WallHackRound(),
+            new TPlantAnywhereRound(),
+            new LowGravityRound(),
+            new RandomLoadoutRound(),
+            new OneBulletSwitchRound(),
+            new ReloadSwitchRound(),
+            new InvisibleRound(),
+            new BigPlayersRound(),
+            new SmallPlayerRound(),
+            new SchizoRound(this),
+            new SharedHPRound(),
+            new TpOnFlashedRound(),
+            new CommanderRound(),
+            new KnockBackRound(),
+            new SpectreRound(),
             new DashRound(),
+            new ChickenRound(),
+            new EnderpearlRound(),
+            new SwitcherooRound(),
 
         };
     }
@@ -83,7 +87,15 @@ public class CS2CustomRounds : BasePlugin
         {
             manifest.AddResource("models/hostage/hostage.vmdl");
             manifest.AddResource("models/hostage/hostage_carry.vmdl");
-
+            manifest.AddResource("models/props_vehicles/bus01_2.vmdl");
+            manifest.AddResource("models/props/cs_office/coffee_mug.vmdl");
+            manifest.AddResource("models/props/cs_office/computer.vmdl");
+            manifest.AddResource("models/props/cs_office/plant01.vmdl");
+            manifest.AddResource("models/props/cs_office/snowman_face.vmdl");
+            manifest.AddResource("models/props/de_inferno/goldfish.vmdl");
+            manifest.AddResource("models/props/de_inferno/hay_bail_stack.vmdl");
+            manifest.AddResource("models/props/de_vertigo/pallet_01.vmdl");
+            manifest.AddResource("models/props/de_vertigo/concretebags.vmdl");
         });
         RegisterListener<Listeners.OnTick>(() =>
         {
@@ -268,6 +280,29 @@ public class CS2CustomRounds : BasePlugin
     public HookResult PlayerPing(EventPlayerPing @event, GameEventInfo info)
     {
         SelectedCustomRound.PlayerPing(@event);
+
+        //var player = @event.Userid;
+        //player!.ExecuteClientCommand("cl_teamid_overhead_mode -1");
+        //player!.ExecuteClientCommandFromServer("cl_teamid_overhead_mode -1");
+        //var prop = Utilities.CreateEntityByName<CDynamicProp>("prop_dynamic");
+        //if (prop != null)
+        //{
+        //    prop.Teleport(new Vector(@event.X, @event.Y, @event.Z));
+        //    prop.DispatchSpawn();
+        //    //prop.ExplodeEffectTickBegin = 1;
+        //    //prop.IsLive = true;
+        //    //prop.DetonateTime = 1;
+        //    //prop.DmgRadius = 800;
+        //    //prop.Damage = 100;
+        //    prop.SetModel("models/props_vehicles/bus01_2.vmdl");
+        //    prop.MoveCollide = MoveCollide_t.MOVECOLLIDE_DEFAULT;
+        //    prop.Collision.CollisionGroup = (byte)CollisionGroup.COLLISION_GROUP_DEFAULT;
+        //    prop.Collision.CollisionAttribute.CollisionGroup = (byte)CollisionGroup.COLLISION_GROUP_DEFAULT;
+        //    prop.MoveType = MoveType_t.MOVETYPE_VPHYSICS;
+        //    prop.Collision.SolidType = SolidType_t.SOLID_VPHYSICS;
+        //    prop.DispatchSpawn();
+
+        //}
         return HookResult.Continue;
     }
 
@@ -424,30 +459,4 @@ public class CS2CustomRounds : BasePlugin
         WarmupEnded = true;
 
     }
-
-    //private CounterStrikeSharp.API.Modules.Timers.Timer? _randomTimer;
-
-    //private void ScheduleNextRandomEvent()
-    //{
-        
-    //    float delay = Random.Shared.NextSingle() * 4f + 1f;
-
-    //    _randomTimer = AddTimer(delay, () =>
-    //    {
-    //        RunRandomEvent();       
-    //        ScheduleNextRandomEvent(); 
-    //    });
-    //}
-
-    //private void RunRandomEvent()
-    //{
-    //    foreach (var player in Utilities.GetPlayers())
-    //    {
-    //        if (player == null || !player.IsValid)
-    //            continue;
-    //        var pawn = player.PlayerPawn.Get();
-    //        pawn!.AddEntityIOEvent("SetHealth", null, null, (pawn.Health - 1).ToString());
-    //        pawn!.AddEntityIOEvent("SetHealth", null, null, (pawn.Health + 1).ToString());
-    //    }
-    //}
 }
