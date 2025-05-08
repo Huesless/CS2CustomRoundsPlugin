@@ -15,11 +15,12 @@ namespace CS2CustomRoundsPlugin
     public class RocketJumpRound : CustomRound
     {
         public override string RoundStartMessage => "Rocket Jump";
-        public override string RoundStartDescription => "HE grenades have insane knockback, lower damage. Infinite grenades.";
+        public override string RoundStartDescription => "HE grenades have insane knockback, lower damage. Infinite grenades. No falldamage.";
         public override void RoundEnd()
         {
             Server.ExecuteCommand("sv_infinite_ammo 0");
             Server.ExecuteCommand("sv_hegrenade_damage_multiplier 1");
+            Server.ExecuteCommand("sv_falldamage_scale 1");
         }
 
         public override void RoundStart()
@@ -27,6 +28,7 @@ namespace CS2CustomRoundsPlugin
             GiveHE();
             Server.ExecuteCommand("sv_infinite_ammo 2");
             Server.ExecuteCommand("sv_hegrenade_damage_multiplier 0.1");
+            Server.ExecuteCommand("sv_falldamage_scale 0");
         }
 
         private Dictionary<int, Vector> grenadeDetonateVectors = new Dictionary<int, Vector>();
