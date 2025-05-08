@@ -18,6 +18,8 @@ namespace CS2CustomRoundsPlugin
         public override void RoundEnd()
         {
             RoundStarted = false;
+            TPawns.Clear();
+            CTPawns.Clear();
         }
 
         public override void RoundStart()
@@ -29,6 +31,25 @@ namespace CS2CustomRoundsPlugin
         {
             SetupCooldownManager();
             RoundStarted = true;
+        }
+        public override void PlayerDeath(EventPlayerDeath @event)
+        {
+            var player = @event.Userid;
+            if (player != null) 
+            {
+                var pawn = player.PlayerPawn.Get();
+                if (pawn != null)
+                {
+                    if (player.Team == CsTeam.Terrorist)
+                    {
+                        TPawns.Remove(pawn);
+                    }
+                    else if (player.Team == CsTeam.CounterTerrorist)
+                    {
+                        CTPawns.Add(pawn);
+                    }
+                }
+            }
         }
         private List<CCSPlayerPawn> TPawns = new List<CCSPlayerPawn>();
         private List<CCSPlayerPawn> CTPawns = new List<CCSPlayerPawn>();

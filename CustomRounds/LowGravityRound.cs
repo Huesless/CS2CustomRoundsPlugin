@@ -9,7 +9,7 @@ namespace CS2CustomRoundsPlugin
 {
     public class LowGravityRound : CustomRound
     {
-        public override string RoundStartMessage => base.RoundStartMessage;
+        public override string RoundStartMessage => "Moon gravity";
         public override string RoundStartDescription => "Low gravity with super jump. No weapon spread penalty.";
         public override void RoundStart()
         {

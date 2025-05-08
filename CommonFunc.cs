@@ -39,7 +39,7 @@ namespace CS2CustomRoundsPlugin
             }
         }
 
-        public static void RemoveAll(CCSPlayerController player)
+        public static void RemoveWeapons2(CCSPlayerController player)
         {
             //Doesn't work correctly
             var pawn = player.PlayerPawn.Get();
@@ -49,11 +49,9 @@ namespace CS2CustomRoundsPlugin
                 {
                     var weaponName = weapon.Value?.DesignerName;
                     
-                    if (weaponName != null && WeaponsSet.AllWeapons.Contains(weaponName))
+                    if (weaponName != null && WeaponsSet.AllWeapons.Contains(weaponName) && weapon.Value != null)
                     {
-                        bool a = player.RemoveItemByDesignerName(weaponName, true);
-                        Server.PrintToChatAll(weaponName ?? "");
-                        Server.PrintToChatAll(a.ToString());
+                        pawn.RemovePlayerItem(weapon.Value);
                     }
                 }
             }

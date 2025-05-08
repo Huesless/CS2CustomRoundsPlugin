@@ -81,7 +81,10 @@ namespace CS2CustomRoundsPlugin
         {
             return;
         }
-
+        public virtual void HegrenadeDetonate(EventHegrenadeDetonate @event)
+        {
+            return;
+        }
         public override string ToString()
         {
             return "Custom round";

@@ -41,14 +41,15 @@ public class CS2CustomRounds : BasePlugin
         {
             //Don't work perfectly yet
             //new BombermanRound(),
-            //new SpeedRound(),
             //new InvertedControlsRound(),
+            
 
             //Boring/not that interesting
             //new TankyRound(),
             //new BounceRound(),
             //new IceFloorRound(),
 
+            new SpeedRound(),
             new DeagleHSOnlyRound(),
             new OneHPDecoyRound(),
             new RandomSpawnRound(),
@@ -77,6 +78,8 @@ public class CS2CustomRounds : BasePlugin
             new ChickenRound(),
             new EnderpearlRound(),
             new SwitcherooRound(),
+            new RocketJumpRound(),
+
 
         };
     }
@@ -303,6 +306,12 @@ public class CS2CustomRounds : BasePlugin
         //    prop.DispatchSpawn();
 
         //}
+        return HookResult.Continue;
+    }
+    [GameEventHandler]
+    public HookResult HegrenadeDetonate(EventHegrenadeDetonate @event, GameEventInfo info)
+    {
+        SelectedCustomRound.HegrenadeDetonate(@event);
         return HookResult.Continue;
     }
 
