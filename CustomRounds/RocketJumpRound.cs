@@ -52,6 +52,13 @@ namespace CS2CustomRoundsPlugin
                 var pawn = player.PlayerPawn.Get();
                 if (pawn != null)
                 {
+
+                    //pawn.TimeScale = 0.5f;
+                    //pawn.GravityScale = 0.5f;
+                    //pawn.BlindStartTime = (float)Server.TickedTime;
+                    //pawn.BlindUntilTime = (float)Server.TickedTime + 5;
+                    //pawn.FlashDuration = 5f;
+                    //pawn.FlashMaxAlpha = 255;
                     var directionVec = pawn.AbsOrigin! - grenadeDetonateVectors[attackerId.Value];
                     if (directionVec.Z < 0.275)
                     {

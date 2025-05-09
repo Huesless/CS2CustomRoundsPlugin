@@ -16,12 +16,12 @@ namespace CS2CustomRoundsPlugin
         public override string RoundStartDescription => "Each team gets a reinforcement of bots.";
         public override void RoundEnd()
         {
-            for (int i = 0; i < 15; i++)
-            {
-                Server.ExecuteCommand("bot_kick ct");
-                Server.ExecuteCommand("bot_kick t");
-            }
-            //Server.ExecuteCommand("bot_kick all");
+            //for (int i = 0; i < 15; i++)
+            //{
+            //    Server.ExecuteCommand("bot_kick ct");
+            //    Server.ExecuteCommand("bot_kick t");
+            //}
+            Server.ExecuteCommand("bot_kick all");
         }
 
         public override void RoundStart()

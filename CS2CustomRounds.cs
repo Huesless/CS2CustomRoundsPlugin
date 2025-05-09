@@ -79,6 +79,7 @@ public class CS2CustomRounds : BasePlugin
             new EnderpearlRound(),
             new SwitcherooRound(),
             new RocketJumpRound(),
+            new LongerFlashesRound(),
 
 
         };
