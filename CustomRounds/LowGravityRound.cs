@@ -13,7 +13,7 @@ namespace CS2CustomRoundsPlugin
         public override string RoundStartDescription => "Low gravity with super jump. No weapon spread penalty.";
         public override void RoundStart()
         {
-            Server.ExecuteCommand("sv_gravity 400");
+            Server.ExecuteCommand("sv_gravity 260");
             Server.ExecuteCommand("sv_jump_impulse 400");
             Server.ExecuteCommand("weapon_accuracy_nospread 1");
         }

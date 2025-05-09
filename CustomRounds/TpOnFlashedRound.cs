@@ -28,7 +28,7 @@ namespace CS2CustomRoundsPlugin
             var blindDuration = @event.BlindDuration;
             
 
-            Server.PrintToChatAll(blindDuration.ToString());
+            //Server.PrintToChatAll(blindDuration.ToString());
             if (player != null && blindDuration > 2f)
             {
                 var pawn = player.PlayerPawn.Get();

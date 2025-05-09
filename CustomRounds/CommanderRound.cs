@@ -27,7 +27,7 @@ namespace CS2CustomRoundsPlugin
         public override void RoundStart()
         {
             //Server.ExecuteCommand("bot_quota 0");
-            Server.ExecuteCommand("bot_quota_mode fill");
+            //Server.ExecuteCommand("bot_quota_mode fill");
             Server.ExecuteCommand("mp_limitteams 5");
             Server.ExecuteCommand("mp_autoteambalance 0");
 

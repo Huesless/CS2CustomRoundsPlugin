@@ -332,6 +332,7 @@ public class CS2CustomRounds : BasePlugin
     }
     private void ShowRoundStartMessage()
     {
+        Server.PrintToConsole(SelectedCustomRound.RoundStartMessage);
         foreach (var player in Utilities.GetPlayers())
         {
             if (player != null)
